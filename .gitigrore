@@ -1,0 +1,13 @@
+# 実行ファイル (Windows)
+a.exe
+
+# 実行ファイル (Mac/Linux)
+a.out
+
+# VS Code の設定フォルダ
+# (コンパイラのパスなどはPCごとに異なるため、共有しないのが一般的です)
+.vscode/
+
+# その他、一時ファイルやOSが作るゴミファイル
+.DS_Store
+Thumbs.db
