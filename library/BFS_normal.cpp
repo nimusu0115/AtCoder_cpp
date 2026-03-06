@@ -3,8 +3,12 @@ using namespace std;
 #define ll long long
 template<class T> void chmax(T& a,T b){ if(a < b) a = b;}
 template<class T> void chmin(T& a,T b){ if(a > b) a = b;}
+vector<vector<int>> G;
+vector<bool> seen;
+vector<ll> dist;
+vector<bool> kakutei;
 //到達可能性
-void bfs_seen(int start,const vector<vector<int>>& G,vector<bool>& seen){
+void bfs_seen(int start){
   queue<int> Q;
   Q.push(start);
   seen[start] = true;
@@ -21,7 +25,7 @@ void bfs_seen(int start,const vector<vector<int>>& G,vector<bool>& seen){
 }
 
 //距離計算
-void bfs_dist(int start,const vector<vector<int>>& G,vector<ll>& dist){
+void bfs_dist(int start){
   queue<int> Q;
   Q.push(start);
   dist[start] = 0;
@@ -38,7 +42,7 @@ void bfs_dist(int start,const vector<vector<int>>& G,vector<ll>& dist){
 }
 
 //距離計算（重み付き）（自己価値含む）
-void bfs_dist(int start,const vector<vector<int>>& G,vector<ll>& dist,vector<ll> V){
+void bfs_dist(int start,vector<ll> V){
   queue<int> Q;
   Q.push(start);
   dist[start] = V[start];
@@ -55,7 +59,7 @@ void bfs_dist(int start,const vector<vector<int>>& G,vector<ll>& dist,vector<ll>
 }
 
 //ダイクストラ法
-void dijkstra(int start,const vector<vector<pair<int,ll>>>& G,vector<ll>& dist,vector<bool>& kakutei){
+void dijkstra(int start,const vector<vector<pair<int,ll>>>& G){
   priority_queue<pair<ll,int>,vector<pair<ll,int>>,greater<pair<ll,int>>> Q;
   Q.push({0,start});
   dist[start] = 0;
