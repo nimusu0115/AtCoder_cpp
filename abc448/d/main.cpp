@@ -11,25 +11,22 @@ const double PI = 3.141592653589;
 template<class T> void chmax(T& a,T b){ if(a < b) a = b;}
 template<class T> void chmin(T& a,T b){ if(a > b) a = b;}
 vector<vector<int>> G;
-vector<bool> seen;
 vector<bool> ans;
 vector<ll> A;
-void bfs_seen(int start){
-  queue<int> Q;
-  Q.push(start);
-  ans[start] = false;
-  seen[start] = true;
-  while(!Q.empty()){
-    int pos = Q.front();
-    Q.pop();
-    for(int to : G[pos]){
-      if(!seen[to]){
-        seen[to] = true;
-        if(ans[pos] || A[start] == A[to]) ans[to] = true;
-        Q.push(to);
-      }
+vector<bool> seen;
+map<ll,int> m;
+
+void dfs(int start,int pre){
+    seen[start] = true;
+    if(m[A[start]] != 0 || ans[pre]) ans[start] = true;
+    m[A[start]]++;
+
+    for(auto next : G[start]){
+        if(seen[next]) continue;
+        dfs(next,start);
     }
-  }
+
+    m[A[start]]--;
 }
 
 int main() {
@@ -39,15 +36,15 @@ int main() {
     rep(i,N) cin >> A[i];
 
     G.resize(N,vector<int>{});
-    seen.resize(N);
     ans.resize(N,false);
+    seen.resize(N,false);
     rep(i,N - 1){
         int a,b;
         cin >> a >> b;
         G[a - 1].push_back(b - 1);
         G[b - 1].push_back(a - 1);
     }
-    bfs_seen(0);
+    dfs(0,0);
     rep(i,N){
         if(ans[i]) cout << "Yes" << endl;
         else cout << "No" << endl;

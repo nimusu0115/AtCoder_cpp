@@ -4,11 +4,11 @@ using namespace std;
 const int dx[4] = {1, 0, -1, 0};
 const int dy[4] = {0, 1, 0, -1};
 int H,W;
-vector<vector<char>> G(H,vector<char>(W));
-vector<vector<bool>> seen(H,vector<int>(W,false));
-vector<vector<int>> dist(H,vector<int>(W,-1));
+vector<vector<char>> G;
+vector<vector<bool>> seen;
+vector<vector<int>> dist;
 //到達可能性（グリッド）
-void bfs_seen(pair<int,int> start,const vector<vector<char>>& G,vector<vector<bool>>& seen){
+void bfs_seen(pair<int,int> start){
   queue<pair<int,int>> Q;
   Q.push(start);
   dist[start.first][start.second] = 0;
@@ -21,6 +21,7 @@ void bfs_seen(pair<int,int> start,const vector<vector<char>>& G,vector<vector<bo
       int nw = w + dy[dir];
 
       if(nh < 0 || H <= nh || nw < 0 || W <= nw) continue;
+      if(seen[nh][nw]) continue;
       if(G[nh][nw] == '#') continue;
 
       seen[nh][nw] = true;
@@ -30,7 +31,7 @@ void bfs_seen(pair<int,int> start,const vector<vector<char>>& G,vector<vector<bo
 }
 
 //最短距離（グリッド）
-void bfs_dist(pair<int,int> start,const vector<vector<char>>& G,vector<vector<bool>>& dist){
+void bfs_dist(pair<int,int> start){
   queue<pair<int,int>> Q;
   Q.push(start);
   dist[start.first][start.second] = 0;
