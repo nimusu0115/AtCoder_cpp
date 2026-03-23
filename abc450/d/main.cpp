@@ -12,4 +12,16 @@ template<class T> void chmax(T& a,T b){ if(a < b) a = b;}
 template<class T> void chmin(T& a,T b){ if(a > b) a = b;}
 
 int main() {
+    ll N,K;
+    cin >> N >> K;
+    vector<ll> A(N);
+    rep(i,N) cin >> A[i];
+    set<ll> s;
+    vector<ll> ss;
+    rep(i,N) s.insert(A[i] % K);
+    for(auto v : s) ss.push_back(v);
+    ll ans = 0;
+    rep(i,ss.size() - 1) chmax(ans,ss[i + 1] - ss[i]);
+    chmax(ans,ss[0] + K - ss.back());
+    cout << K - ans << endl;
 }
