@@ -1,0 +1,41 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+#define rep(i,n) for(int i = 0;i < n;i++)
+#define rrep(i,n) for(int i = n - 1;i >= 0;i--)
+#define onerep(i,n) for(int i = 1;i <= n;i++)
+#define ALL(a)  (a).begin(),(a).end()
+const int inf = 1<<30;
+const ll llinf = 1LL<<60;
+const double PI = 3.141592653589;
+template<class T> void chmax(T& a,T b){ if(a < b) a = b;}
+template<class T> void chmin(T& a,T b){ if(a > b) a = b;}
+
+int main() {
+    int Q;
+    cin >> Q;
+
+    priority_queue<ll,vector<ll>,greater<ll>> que;
+    int wood = 0;
+    int cut = 0;
+    while(Q > 0){
+        Q--;
+
+        int c;
+        ll h;
+        cin >> c >> h;
+
+        if(c == 1){
+            que.push(h);
+            wood++;
+        }
+        if(c == 2){
+            while(!que.empty()){
+                if(que.top() > h) break;
+                que.pop();
+                cut++;
+            }
+        }
+        cout << wood - cut << endl;
+    }
+}
