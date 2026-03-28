@@ -18,12 +18,18 @@ ll solve(ll x,char C){
     if(x == 0) return 0;
     ll res = 0;
     rrep(i,length.size()){
+        if(i <= 1) continue;
         if(length[i] <= x){
             res += cX[C] * fib[i].first + cY[C] * fib[i].second;
             x -= length[i];
         }
     }
-    rep(i,x) if(X[i] == C) res++;
+    if(x >= Y.size()){
+        res += cY[C];
+        x -= Y.size();
+        rep(i,x) if(X[i] == C) res++;
+    }
+    else rep(i,x) if(Y[i] == C) res++;
     return res;
 }
 
@@ -46,13 +52,16 @@ int main() {
         ll fir = fib[m - 1].first + fib[m - 2].first;
         ll sec = fib[m - 1].second + fib[m - 2].second;
         fib.push_back({fir,sec});
+        m++;
     }
 
     while(Q > 0){
+        Q--;
+
         ll L,R;
         char C;
         cin >> L >> R >> C;
 
-        cout << solve(R,C) - solve(L,C) << endl;
+        cout << solve(R,C) - solve(L - 1,C) << endl;
     }
 }
