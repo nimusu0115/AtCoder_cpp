@@ -13,23 +13,33 @@ template<class T> void chmin(T& a,T b){ if(a > b) a = b;}
 const int dx[4] = {0, 0, 1, 1};
 const int dy[4] = {0, 1, 0, 1};
 int H,W;
-int rec(vector<string> S,int cnt){
-    if(cnt >= 9) return cnt;
-    int h = 0,w = 0;
-    rep(i,H - 1){
-        rep(j,W - 1){
-            if(S[i][j] == '#' && S[i + 1][j] == '#' && S[i][j + 1] == '#' && S[i + 1][j + 1] == '#'){
-                rep(dir,4){
-                    S[i + dx[dir]][j + dy[dir]] = '.';
-                    rec(S,cnt + 1);
-                }
-            }
+int ans;
+void rec(vector<string> S,int n,int cnt){
+    //if(cnt > 9) return;
+    if(n == (H - 1) * (W - 1)){
+        chmin(ans,cnt);
+        return;
+    }
+
+    int h = n / (W - 1);
+    int w = n % (W - 1);
+
+    int c = 0;
+    rep(dir,4){
+        int nh = h + dx[dir];
+        int nw = w + dy[dir];
+        if(S[nh][nw] == '.') c++;
+    }
+    if(c != 0) rec(S,n + 1,cnt);
+    else{
+        for(int dir = 2;dir < 4;dir++){
+            auto T = S;
+            int nh = h + dx[dir];
+            int nw = w + dy[dir];
+            T[nh][nw] = '.';
+            rec(T,n + 1,cnt + 1);
         }
     }
-}
-
-int solve(vector<string> S){
-
 }
 
 int main() {
@@ -41,5 +51,10 @@ int main() {
         cin >> H >> W;
         vector<string> S(H);
         rep(i,H) cin >> S[i];
+        ans = inf;
+
+        rec(S,0,0);
+
+        cout << ans << endl;
     }
 }
