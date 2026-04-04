@@ -14,36 +14,33 @@ const int dx[4] = {1, 0, -1, 0};
 const int dy[4] = {0, 1, 0, -1};
 int H,W;
 vector<string> S;
-vector<vector<bool>> seen;
 vector<vector<int>> dist;
 
 void bfs_seen(pair<int,int> start,int kick){
-  queue<pair<int,int>> Q;
-  Q.push(start);
-  if(dist[start.first][start.second] != -1) dist[start.first][start.second] = kick;
-  while(!Q.empty()){
-    int h = Q.front().first;
-    int w = Q.front().second;
-    Q.pop();
-    rep(dir,4){
-      int nh = h + dx[dir];
-      int nw = w + dy[dir];
+	queue<pair<int,int>> Q;
+	Q.push(start);
+	if(dist[start.first][start.second] == -1) dist[start.first][start.second] = kick;
+	while(!Q.empty()){
+		int h = Q.front().first; 
+		int w = Q.front().second;
+		Q.pop();
+		rep(dir,4){
+			int nh = h + dx[dir];
+			int nw = w + dy[dir];
 
-      if(nh < 0 || H <= nh || nw < 0 || W <= nw) continue;
-      if(seen[nh][nw]) continue;
-      if(S[nh][nw] == '#'){
-        dist[nh][nw] = kick + 1;
-        int nnh = nh + dx[dir];
-        int nnw = nw + dy[dir];
-        if(nnh < 0 || H <= nnh || nnw < 0 || W <= nnw) continue;
-        dist[nnh][nnw] = kick + 1;
-        continue;
-      }
+			if(nh < 0 || H <= nh || nw < 0 || W <= nw) continue;
+			if(dist[nh][nw] == -1 || dist[nh][nw] == kick + 1){
+				dist[nh][nw] = kick + 1;
+				int nnh = nh + dx[dir];
+				int nnw = nw + dy[dir];
+				if(nnh < 0 || H <= nnh || nnw < 0 || W <= nnw) continue;
+				dist[nnh][nnw] = kick + 1;
+				continue;
+			}
 
-      seen[nh][nw] = true;
-      Q.push({nh,nw});
-    }
-  }
+			Q.push({nh,nw});
+		}
+	}
 }
 
 int main() {
@@ -57,7 +54,6 @@ int main() {
     dist.resize(H,vector<int>(W,-1));
     int kick = 0;
     while(dist[c - 1][d - 1] == -1){
-        seen.resize(H,vector<bool>(W,false));
         bfs_seen({a - 1,b - 1},kick);
         kick++;
     }
