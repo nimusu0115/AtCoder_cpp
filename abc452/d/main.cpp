@@ -33,13 +33,15 @@ int main() {
     onerep(i,N){
         int pos = i;
         rep(j,M){
-            if(pos == inf) continue;
+            if(pos > N){
+                pos = inf;
+                continue;
+            }
             int next = T[j] - 'a';
-            pos = V[next][pos];
+            pos = V[next][pos] + 1;
         }
-        if(pos == inf) ans += N - i + 1;
-        else ans += pos - i;
+        if(pos >= inf) ans += N - i + 1;
+        else ans += pos - 1 - i;
     }
     cout << ans << endl;
-    //rep(i,N + 1) cout << V[0][i] << endl;
 }
