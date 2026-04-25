@@ -40,7 +40,7 @@ void bfs_seen(pair<int,int> start){
                 if(seen[nh][nw][i]) continue;
                 Q.push({nh,nw,i});
                 seen[nh][nw][i] = true;
-                pre[nh][nw][i] = {h,w,i};
+                pre[nh][nw][i] = {h,w,dir};
             }
         }
         if(S[nh][nw] == 'o'){
@@ -55,7 +55,7 @@ void bfs_seen(pair<int,int> start){
                     if(seen[nh][nw][i]) continue;
                     Q.push({nh,nw,i});
                     seen[nh][nw][i] = true;
-                    pre[nh][nw][i] = {h,w,i};
+                    pre[nh][nw][i] = {h,w,dir};
                 }
             }
         }
@@ -91,11 +91,12 @@ int main() {
             vector<char> ans;
             while(posx != sx || posy != sy){
                 ans.push_back(udlr[get<2>(pre[posx][posy][posz])]);
-                //cout << posx << posy << posz << pre[posx][posy][posz] << endl;
-                int a = posz;
-                posz = get<2>(pre[posx][posy][a]);
-                posx = get<0>(pre[posx][posy][a]);
-                posy = get<1>(pre[posx][posy][a]);
+                int a = posx;
+                int b = posy;
+                int c = posz;
+                posx = get<0>(pre[a][b][c]);
+                posy = get<1>(pre[a][b][c]);
+                posz = get<2>(pre[a][b][c]);
             }
             rrep(j,ans.size()) cout << ans[j];
             
@@ -104,15 +105,5 @@ int main() {
             return 0;
         }
     }
-    
-
-    /*rep(i,H){
-        rep(j,W){
-            bool flg = false;
-            rep(k,4) if(seen[i][j][k]) flg = true;
-            cout << flg;
-        }
-        cout << endl;
-    }*/
     cout << "No" << endl;
 }

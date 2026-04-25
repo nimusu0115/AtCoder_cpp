@@ -13,29 +13,33 @@ template<class T> void chmin(T& a,T b){ if(a > b) a = b;}
 
 int main() {
     string S,T;
-    cin >> S;
-    cin >> T;
+    cin >> S >> T;
 
-    vector<vector<ll>> dp(S.size() + 1,vector<ll>(T.size() + 1,0LL));
-    onerep(i,S.size()){
-        onerep(j,T.size()){
-            if(S[i - 1] == T[j - 1]){
-                if(j == 1) dp[i][j] += dp[i - 1][j] + i;
-                else if(dp[i - 1][j] >= 1) dp[i][j] += dp[i - 1][j] + 1;
-                else if(dp[i - 1][j - 1] >= 1) dp[i][j] += 1;
+    int N = S.size(),M = T.size();
+
+    vector<vector<int>> V(26,vector<int>(N + 1,inf));
+    rep(i,26){
+        rrep(j,N + 1){
+            if(j == 0){
+                V[i][j] = 0;
+                continue;
             }
-            else if(dp[i - 1][j] >= 1) dp[i][j] += dp[i - 1][j] + 1;
+            if(S[j - 1] - 'a' == i) V[i][j] = j;
+            else if(j != N) V[i][j] = V[i][j + 1];
         }
     }
 
-    ll ans = S.size() * (S.size() - 1) / 2 + S.size();
-    ans -= dp[S.size()][T.size()];
+    ll ans = 0;
+    onerep(i,N){
+        int pos = i;
+        rep(j,M){
+            if(pos == inf) continue;
+            int next = T[j] - 'a';
+            pos = V[next][pos];
+        }
+        if(pos == inf) ans += N - i + 1;
+        else ans += pos - i;
+    }
     cout << ans << endl;
-
-    onerep(i,S.size()){
-        onerep(j,T.size()){
-            cout << dp[i][j];
-        }
-        cout << endl;
-    }
+    //rep(i,N + 1) cout << V[0][i] << endl;
 }

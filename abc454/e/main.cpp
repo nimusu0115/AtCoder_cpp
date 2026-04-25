@@ -24,109 +24,37 @@ int main() {
             cout << "No" << endl;
             continue;
         }
+
         if((A + B) % 2 == 0){
             cout << "No" << endl;
             continue;
         }
+
         cout << "Yes" << endl;
-        if(A == 1){
-            rep(i,B / 2 - 1){
+        onerep(i,N / 2){
+            if(i < (B + 1) / 2){
                 rep(j,N - 1) cout << 'D';
                 cout << 'R';
                 rep(j,N - 1) cout << 'U';
                 cout << 'R';
             }
-            rep(i,N - 1) cout << 'D';
-            cout << 'R';
-            rep(i,N - 2) cout << 'U';
-            rep(i,(N - B) / 2) cout << "RURD";
-            rep(i,(N - 2) / 2){
-                cout << 'D';
-                rep(j,N - B - 1) cout << 'L';
-                cout << 'D';
-                rep(j,N - B - 1) cout << 'R';
+            else if(i == (B + 1) / 2){
+                onerep(j,N / 2){
+                    if(j < (A + 1) / 2) cout << "RDLD";
+                    else if(j == (A + 1) / 2){
+                        if(A % 2 == 0) cout << "RD";
+                        if(A % 2 == 1) cout << "DR";
+                    }
+                    else if(j > (A + 1) / 2) cout << "DLDR";
+                }
             }
-            cout << endl;
-        }
-        else if(B == 1){
-            rep(i,A / 2 - 1){
-                rep(j,N - 1) cout << 'R';
-                cout << 'D';
-                rep(j,N - 1) cout << 'L';
-                cout << 'D';
-            }
-            rep(i,N - 1) cout << 'R';
-            cout << 'D';
-            rep(i,N - 2) cout << 'L';
-            rep(i,(N - A) / 2) cout << "DLDR";
-            rep(i,(N - 2) / 2){
-                cout << 'R';
-                rep(j,N - A - 1) cout << 'U';
-                cout << 'R';
-                rep(j,N - A - 1) cout << 'D';
-            }
-            cout << endl;
-        }
-        else if(A % 2 == 0){
-            rep(i,(B - 1) / 2 - 1){
-                rep(j,N - 1) cout << 'D';
+            else if(i > (B + 1) / 2){
                 cout << 'R';
                 rep(j,N - 1) cout << 'U';
                 cout << 'R';
+                rep(j,N - 1) cout << 'D';
             }
-            rep(i,N - 1) cout << 'D';
-            cout << 'R';
-            rep(i,(N - A) / 2) cout << "RULU";
-            rep(i,A - 1) cout << 'U';
-            cout << 'R';
-            rep(i,(A - 2) / 2){
-                rep(j,N - B) cout << 'R';
-                cout << 'D';
-                rep(j,N - B) cout << 'L';
-                cout << 'D';
-            }
-            rep(j,N - B) cout << 'R';
-            cout << 'D';
-            rep(i,N - B - 1) cout << 'L';
-            cout << 'D';
-            rep(i,(N - B - 1) / 2){
-                rep(j,N - A - 1) cout << 'D';
-                cout << 'R';
-                rep(j,N - A - 1) cout << 'U';
-                cout << 'R';
-            }
-            rep(i,N - A - 1) cout << 'D';
         }
-        else if(B % 2 == 0){
-            rep(i,(A - 1) / 2 - 1){
-                rep(j,N - 1) cout << 'R';
-                cout << 'D';
-                rep(j,N - 1) cout << 'L';
-                cout << 'D';
-            }
-            rep(i,N - 1) cout << 'R';
-            cout << 'D';
-            rep(i,(N - B) / 2) cout << "DLUL";
-            rep(i,B - 1) cout << 'L';
-            cout << 'D';
-            rep(i,(B - 2) / 2){
-                rep(j,N - A) cout << 'D';
-                cout << 'R';
-                rep(j,N - A) cout << 'U';
-                cout << 'R';
-            }
-            rep(j,N - A) cout << 'D';
-            cout << 'R';
-            rep(i,N - A - 1) cout << 'U';
-            cout << 'R';
-            rep(i,(N - A - 1) / 2){
-                rep(j,N - B - 1) cout << 'R';
-                cout << 'D';
-                rep(j,N - B - 1) cout << 'L';
-                cout << 'D';
-            }
-            rep(i,N - B - 1) cout << 'R';
-            cout << endl;
-        }
+        cout << endl;
     }
 }
