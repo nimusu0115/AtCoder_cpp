@@ -37,14 +37,6 @@ mint com(int n, int k){
 
 int main() {
     cominit();
-    ll A,B,C;
-    cin >> A >> B >> C;
 
-    mint ans = 0;
-
-    onerep(i,B){
-        ans += com(B + 1,i) * com(A - 1,i - 1) * com(C + B - i,C);
-    }
-
-    cout << ans.val() << endl;
+    cout << com(500000,20000).val() << endl;
 }
