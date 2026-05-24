@@ -45,12 +45,12 @@ int main() {
                 if(flg){
                     auto k = *ss.begin();
                     char a = 'a' + k.second;
-                    rep(i,k.first) ansl = ansl + a;
+                    ansl = ansl + string(k.first,a);
                 }
                 else{
                     auto k = *ss.begin();
                     char a = 'a' + k.second;
-                    rep(i,k.first) ansr = a + ansr;
+                    ansr = string(k.first,a) + ansr;
                 }
                 ss.erase(ss.begin());
                 flg ^= 1;
@@ -58,18 +58,14 @@ int main() {
             auto k = *ss.begin();
             char a = 'a' + k.second;
             int t = (S.size() + 1) / 2 - ansl.size();
-            rep(i,t) ansl = ansl + a;
-            rep(i,k.first - t) ansr = a + ansr;
-            //cout << k.first << " " << k.second << " " << t << endl;
-            //cout << ss.size() << endl;
+            ansl = ansl + string(t,a);
+            ansr = string(k.first - t,a) + ansr;
 
             rep(i,S.size()){
                 if(i % 2 == 0) cout << ansl[i / 2];
                 else cout << ansr[(i - 1) / 2];
             }
             cout << endl;
-            //cout << ansl << " " << ansr << endl;
-            //for(auto c : ss) cout << c.first << " " << c.second << endl;
         }
         else{
             cout << "No" << endl;
