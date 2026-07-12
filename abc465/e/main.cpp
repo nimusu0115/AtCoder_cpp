@@ -13,17 +13,61 @@ template<class T> void chmin(T& a,T b){ if(a > b) a = b;}
 ll prm = 998244353;
 
 int main() {
-    string N;
-    cin >> N;
+    string S;
+    cin >> S;
 
-    int l = N.size();
+    int N = S.size();
 
-    ll a,b,c;
-    rrep(i,(l + 8) / 9){
-        int k = (l + 8) / 9 - i;
-        
-        if(k == (l + 8) / 9){
-            rep(j,l - 9 * k){
+    ll dp[N][2][3][1<<10] = {0};
+
+    onerep(p,S[0] - '0'){
+        if(p == S[0] - '0') dp[0][1][p % 3][1<<p] = 1;
+        else dp[0][0][p % 3][1<<p] = 1;
+    }
+    
+    rep(i,N - 1){
+        rep(j,2){
+            rep(k,3){
+                rep(bit,1<<10){
+                    if(j == 1){
+                        rep(p,S[i] - '0'){
+                            int bitnext = bit | (1<<p);
+                            dp[i + 1][0][(k + p) % 3][bitnext] += dp[i][j][k][bit] % prm;
+                        }
+                        dp[i + 1][1][(k + S[i] - '0') % 3][bit | (1<<S[i] - '0')] += dp[i][j][k][bit] % prm;
+                        continue;
+                    }
+
+                    set<int> s = {};
+                    rep(p,10) if(((bit>>i) & 1) == 1) s.insert(p);
+                    if(s.size() == 1 && s.count(0)){
+                        onerep(p,9){
+                            int bitnext = bit | (1<<p);
+                            dp[i + 1][0][(k + p) % 3][bitnext] += dp[i][j][k][bit] % prm;
+                        }
+                        continue;
+                    }
+
+                    rep(p,10){
+                        int bitnext = bit | (1<<p);
+                        dp[i + 1][0][(k + p) % 3][bitnext] += dp[i][j][k][bit] % prm;
+                    }
+                }
+            }
+        }
+    }
+
+    ll ans = 0;
+    rep(j,2){
+        rep(k,2){
+            rep(l,3){
+                rep(bit,1<<10){
+                    set<int> s = {};
+                    rep(p,10) if(((bit>>i) & 1) == 1) s.insert(p);
+
+                    int a = 0;
+                    if()
+                }
             }
         }
     }
