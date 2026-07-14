@@ -5,6 +5,7 @@ vector<vector<int>> G;
 vector<bool> seen;
 vector<int> first_order;
 vector<int> last_order;
+vector<int> depth;
 int ptr;
 
 //DFS
@@ -27,6 +28,17 @@ void dfs_order(int start){
     }
 
     last_order[start] = ptr++;
+}
+
+//深さ計算
+void dfs_depth(int start, int d){
+    seen[start] = true;
+    depth[start] = d;
+
+    for(auto next : G[start]){
+        if(seen[next]) continue;
+        dfs_depth(next, d + 1);
+    }
 }
 
 int main() {
