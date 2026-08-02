@@ -60,21 +60,21 @@ void bfs_dist(int start,vector<ll> V){
 
 //ダイクストラ法
 void dijkstra(int start,const vector<vector<pair<int,ll>>>& G){
-  priority_queue<pair<ll,int>,vector<pair<ll,int>>,greater<pair<ll,int>>> Q;
-  Q.push({0,start});
-  dist[start] = 0;
-  kakutei[start] = 0;
-  while(!Q.empty()){
-    int pos = Q.top().second;
-    Q.pop();
-    if(kakutei[pos]) continue;
-    kakutei[pos] = true;
-    for(auto v : G[pos]){
-        int to = v.first;
-        ll cost = v.second;
-        if(dist[to] <= dist[pos] + cost) continue;
-        chmin(dist[to],dist[pos] + cost);
-        Q.push({dist[to],to});
+	priority_queue<pair<ll,int>,vector<pair<ll,int>>,greater<pair<ll,int>>> Q;
+	Q.push({0,start});
+	dist[start] = 0;
+	kakutei[start] = 0;
+	while(!Q.empty()){
+		int pos = Q.top().second;
+		Q.pop();
+		if(kakutei[pos]) continue;
+		kakutei[pos] = true;
+		for(auto v : G[pos]){
+			int to = v.first;
+			ll cost = v.second;
+			if(dist[to] <= dist[pos] + cost) continue;
+			chmin(dist[to],dist[pos] + cost);
+			Q.push({dist[to],to});
         }
     }
 }
