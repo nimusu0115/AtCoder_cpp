@@ -1,8 +1,8 @@
 #include<bits/stdc++.h>
-#include <atcoder/all>
+//#include <atcoder/all>
 using namespace std;
-using namespace atcoder;
-using mint = modint998244353;
+//using namespace atcoder;
+//using mint = modint998244353;
 #define ll long long
 #define rep(i,n) for(int i = 0;i < n;i++)
 #define rrep(i,n) for(int i = n - 1;i >= 0;i--)
@@ -19,40 +19,27 @@ int main() {
     cin >> N >> M;
     vector<int> A(M),B(M);
     rep(i,M) cin >> A[i] >> B[i];
+    rep(i,M) A[i]--,B[i]--;
+
+    int a = A[0],b = B[0];
+    vector<int> alpha(N,0),beta(N,0),gamma(N,0);
+
+    rep(i,M){
+        alpha[A[i]]++;
+        alpha[B[i]]++;
+        if(A[i] == A[0]) beta[B[i]]++;
+        if(B[i] == A[0]) beta[A[i]]++;
+        if(A[i] == B[0]) gamma[B[i]]++;
+        if(B[i] == B[0]) gamma[A[i]]++;
+    }
 
     int ans = 0;
-    int a = A[0],c,d,cnt = 0,ccnt = 0,dcnt = 0;
-    set<pair<int,int>> S;
-    rep(i,M){
-        if(A[i] == a || B[i] == a) continue;
-        c = A[i],d = B[i];
+    rep(i,N){
+        if(alpha[A[0]] + alpha[i] - beta[i] == M && i != A[0]) ans++;
+        if(alpha[B[0]] + alpha[i] - gamma[i] == M && i != B[0]) ans++;
     }
-    rep(i,M){
-        if(A[i] == a || B[i] == a) continue;
-        cnt++;
-        if(A[i] == c || B[i] == c) ccnt++;
-        if(A[i] == d || B[i] == d) dcnt++;
-    }
-    if(cnt == ccnt && cnt != 0) S.insert({a,c}),S.insert({c,a});
-    if(cnt == dcnt && cnt != 0) S.insert({a,d}),S.insert({d,a});
-
-    int b = B[0],e,f,cnt2 = 0,ecnt = 0,fcnt = 0;
-    rep(i,M){
-        if(A[i] == b || B[i] == b) continue;
-        e = A[i],f = B[i];
-    }
-    rep(i,M){
-        if(A[i] == b || B[i] == b) continue;
-        cnt2++;
-        if(A[i] == e || B[i] == e) ecnt++;
-        if(A[i] == f || B[i] == f) fcnt++;
-    }
-    if(cnt2 == ecnt && cnt2 != 0) S.insert({b,e}),S.insert({e,b});
-    if(cnt2 == fcnt && cnt2 != 0) S.insert({b,f}),S.insert({f,b});
-
-    if(cnt == 0 && cnt2 != 0) cout << N - 2 + S.size() / 2 << endl;
-    else if(cnt != 0 && cnt2 == 0) cout << N - 2 + S.size() / 2 << endl;
-    else if(cnt == 0 && cnt2 == 0) cout << 2 * (N - 2) + 1 << endl;
-    else cout << S.size() / 2 << endl;
-    //for(auto a : S) cout << a.first << a.second << endl;
+    bool flg = true;
+    rep(i,M) if(A[i] != A[0] && A[i] != B[0] && B[i] != A[0] && B[i] != B[0]) flg = false;
+    if(flg) ans--;
+    cout << ans << endl;
 }
