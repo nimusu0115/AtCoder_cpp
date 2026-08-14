@@ -11,16 +11,22 @@ using mint = modint998244353;
 const int inf = 1<<30;
 const ll llinf = 1LL<<60;
 const double PI = 3.141592653589;
+// a を現在値と b の大きい方／小さい方に更新する。
 template<class T> void chmax(T& a,T b){ if(a < b) a = b;}
 template<class T> void chmin(T& a,T b){ if(a > b) a = b;}
 
+// dp[桁数][上限S未満か][各桁の和 mod 3][使用した数字の集合]。
+// 各状態に該当する整数の個数を mod 998244353 で保持する。
 mint dp[505][2][3][1<<10];
 
+// 1～Sの整数のうち、次の3条件をちょうど1つ満たすものを数える。
+// 「異なる数字を3種類使う」「各桁の和が3の倍数」「数字3を使う」。
 int main() {
     string S;
     cin >> S;
 
-    int N = S.size();
+    assert(S.size() < 505);
+    int N = static_cast<int>(S.size());
 
 
     dp[0][0][0][0] = 1;
@@ -38,13 +44,13 @@ int main() {
                         int next_smaller = smaller | (p < limit);
                         int bitnext = bit | (1<<p);
 
-                        //leading-zero
+                        // まだ有効数字を置いていない間は、0を使用数字に含めない。
                         if(bit == 0){
                             if(p == 0) dp[i + 1][next_smaller][0][0] += dp[i][smaller][mod][bit];
                             else dp[i + 1][next_smaller][p % 3][bitnext] += dp[i][smaller][mod][bit];
                         }
 
-                        //normal process
+                        // 有効数字の開始後は、使用数字と各桁の和を更新する。
                         else dp[i + 1][next_smaller][(mod + p) % 3][bitnext] += dp[i][smaller][mod][bit];
                     }
 
@@ -57,7 +63,7 @@ int main() {
     rep(smaller,2){
         rep(mod,3){
             rep(bit,1<<10){
-                //except zero
+                // 何も有効数字を置かなかった状態（整数0）は数えない。
                 if(bit == 0) continue;
 
                 int count = 0;

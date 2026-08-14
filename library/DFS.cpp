@@ -8,7 +8,8 @@ vector<int> last_order;
 vector<int> depth;
 int ptr;
 
-//DFS
+// start から深さ優先探索し、到達できる頂点を seen=true にする。
+// 前提: seen は頂点数と同じサイズの false で初期化されている。
 void dfs(int start){
     seen[start] = true;
 
@@ -18,7 +19,8 @@ void dfs(int start){
     }
 }
 
-//タイムスタンプ
+// DFSで頂点に入った時刻を first_order、出た時刻を last_order に記録する。
+// 前提: first_order と last_order は -1、ptr は 0 で初期化されている。
 void dfs_order(int start){
     first_order[start] = ptr++;
 
@@ -30,7 +32,8 @@ void dfs_order(int start){
     last_order[start] = ptr++;
 }
 
-//深さ計算
+// start を深さ d としてDFSし、各頂点の深さを depth に記録する。
+// 前提: seen は false で初期化されている。
 void dfs_depth(int start, int d){
     seen[start] = true;
     depth[start] = d;
@@ -41,6 +44,7 @@ void dfs_depth(int start, int d){
     }
 }
 
+// 無向グラフを入力して G を構築する使用例。
 int main() {
     int N,M;
     cin >> N >> M;

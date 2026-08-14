@@ -10,12 +10,15 @@ using mint = atcoder::modint998244353;
 const int inf = 1<<30;
 const ll llinf = 1LL<<60;
 const double PI = 3.141592653589;
+// a を現在値と b の大きい方／小さい方に更新する。
 template<class T> void chmax(T& a,T b){ if(a < b) a = b;}
 template<class T> void chmin(T& a,T b){ if(a > b) a = b;}
 const int MAX = 10'000'010;
+// fac[i]=i!, finv[i]=(i!)^{-1}, inv[i]=i^{-1}（mod 998244353）。
 mint fac[MAX], finv[MAX], inv[MAX];
 
-// テーブルを作る前処理
+// 0～MAX-1 の階乗・逆元・逆階乗を O(MAX) で前計算する。
+// comを呼ぶ前に一度だけ実行する。
 void cominit() {
     const int MOD = mint::mod();
     fac[0] = fac[1] = 1;
@@ -28,13 +31,16 @@ void cominit() {
     }
 }
 
-// 二項係数計算
+// 二項係数 nCk を mod 998244353 で返す。範囲外の k に対しては 0 を返す。
+// 前提: cominit()が実行済みで、0 <= n < MAX。
 mint com(int n, int k){
     if (n < k) return 0;
     if (n < 0 || k < 0) return 0;
+    assert(n < MAX);
     return fac[n] * finv[k] * finv[n - k];
 }
 
+// 前計算後に二項係数を求める使用例。
 int main() {
     cominit();
 
