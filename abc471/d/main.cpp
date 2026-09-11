@@ -1,8 +1,8 @@
 #include<bits/stdc++.h>
-#include <atcoder/all>
+//#include <atcoder/all>
 using namespace std;
-using namespace atcoder;
-using mint = modint998244353;
+//using namespace atcoder;
+//using mint = modint998244353;
 #define ll long long
 #define rep(i,n) for(int i = 0;i < n;i++)
 #define rrep(i,n) for(int i = n - 1;i >= 0;i--)
