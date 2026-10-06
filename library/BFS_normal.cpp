@@ -1,12 +1,14 @@
 #include<bits/stdc++.h>
 using namespace std;
 #define ll long long
+const ll llinf = 1LL<<60;
 // a を現在値と b の大きい方／小さい方に更新する。
 template<class T> void chmax(T& a,T b){ if(a < b) a = b;}
 template<class T> void chmin(T& a,T b){ if(a > b) a = b;}
 
 // 無重みグラフと、各探索で使用する状態配列。
 vector<vector<int>> G;
+vector<vector<pair<int,ll>>> weighted_graph;
 vector<bool> seen;
 vector<ll> dist;
 vector<bool> kakutei;
@@ -68,7 +70,7 @@ void bfs_dist(int start,const vector<ll>& V){
 
 // 非負の辺重みを持つグラフで、start から各頂点への最短距離を dist に記録する。
 // weighted_graph[v] の各要素は {行き先, 辺の重み}。到達不能なら LLONG_MAX のまま残る。
-void dijkstra(int start,const vector<vector<pair<int,ll>>>& weighted_graph){
+void dijkstra(int start){
 	dist.assign(weighted_graph.size(), numeric_limits<ll>::max());
 	kakutei.assign(weighted_graph.size(), false);
 	priority_queue<pair<ll,int>,vector<pair<ll,int>>,greater<pair<ll,int>>> Q;
@@ -87,4 +89,12 @@ void dijkstra(int start,const vector<vector<pair<int,ll>>>& weighted_graph){
 			Q.push({dist[to],to});
         }
     }
+}
+
+int main() {
+    int N;
+    cin >> N;
+
+	weighted_graph.assign(N,vector<pair<int,ll>>{});
+    dist.assign(N,llinf);
 }

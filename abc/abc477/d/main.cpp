@@ -15,4 +15,41 @@ template<class T> void chmax(T& a,T b){ if(a < b) a = b;}
 template<class T> void chmin(T& a,T b){ if(a > b) a = b;}
 
 int main() {
+    int N,Q;
+    cin >> N >> Q;
+    char clr = 'a';
+
+    map<int,char> m;
+    set<int> s;
+    while(Q > 0){
+        Q--;
+
+        int t;
+        cin >> t;
+        if(t == 1){
+            int x;
+            cin >> x;
+            x--;
+
+            if(m.count(x)){
+                if(s.count(x)) s.erase(x);
+                else s.insert(x);
+            }
+            else m[x] = clr;
+        }
+        if(t == 2){
+            char c;
+            cin >> c;
+
+            for(auto v : s) m.erase(v);
+            s.clear();
+            clr = c;
+        }
+    }
+
+    rep(i,N){
+        if(m.count(i)) cout << m[i];
+        else cout << clr;
+    }
+    cout << endl;
 }

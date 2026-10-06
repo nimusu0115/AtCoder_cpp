@@ -8,7 +8,6 @@ vector<vector<int>> rG;
 vector<int> order;
 vector<bool> seen;
 vector<int> comp;
-int N;
 
 // 元のグラフ G をDFSし、帰りがけ順に頂点を order へ追加する。
 void dfs_scc1(int start){
@@ -36,7 +35,7 @@ void dfs_scc2(int start,int k){
 // G と rG は同じ有向辺を互いに逆向きで保持している必要がある。
 // 戻り値の成分番号は、成分を縮約したDAGのトポロジカル順になる。
 vector<int> scc(){
-    N = static_cast<int>(G.size());
+    int N = static_cast<int>(G.size());
     order.clear();
     seen.assign(N, false);
     comp.assign(N, -1);
@@ -58,7 +57,7 @@ vector<int> scc(){
 
 // 有向グラフを強連結成分分解し、相互に到達可能な頂点ペア数を求める使用例。
 int main() {
-    int M;
+    int N,M;
     cin >> N >> M;
     G.resize(N,vector<int>{});
     rG.resize(N,vector<int>{});
