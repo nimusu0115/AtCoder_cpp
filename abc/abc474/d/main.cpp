@@ -13,6 +13,44 @@ const ll llinf = 1LL<<60;
 const double PI = 3.141592653589;
 template<class T> void chmax(T& a,T b){ if(a < b) a = b;}
 template<class T> void chmin(T& a,T b){ if(a > b) a = b;}
+ll pw(ll a,ll b){
+    assert(b >= 0);
+    ll res = 1;
+    while(b > 0){
+        if(b & 1) res *= a;
+        a *= a;
+        b >>= 1;
+    }
+    return res;
+}
 
 int main() {
+    int N;
+    cin >> N;
+    vector<__int128> A(N),B(N);
+    vector<ll>W(N,1);
+    rep(i,N){
+        ll a;
+        cin >> a;
+        A[i] = a;
+    }
+        rep(i,N){
+        ll b;
+        cin >> b;
+        B[i] = b;
+    }
+
+    rep(i,N) if(A[i] > B[i]) W[i] = pw(10,18);
+
+    __int128 cnt = 0;
+    rep(i,N) cnt += (A[i] - B[i]) * W[i];
+    if(cnt > 0){
+        cout << "Yes" << endl;
+        rep(i,N){
+            cout << W[i];
+            if(i != N - 1) cout << " ";
+        }
+        cout << endl;
+    }
+    else cout << "No" << endl;
 }
