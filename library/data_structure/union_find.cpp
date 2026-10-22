@@ -1,6 +1,5 @@
 #include<bits/stdc++.h>
 using namespace std;
-#define rep(i,n) for(int i = 0;i < n;i++)
 
 // 素集合データ構造。経路圧縮とunion by sizeにより連結成分を管理する。
 struct UnionFind{

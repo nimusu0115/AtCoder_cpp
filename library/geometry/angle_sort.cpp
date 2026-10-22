@@ -1,6 +1,7 @@
 #include<bits/stdc++.h>
 using namespace std;
-#define ll long long
+using ll = long long;
+// |x|,|y| <= 10^18 を想定（外積は符号付き128bit内）。
 // 原点から見た2次元ベクトル。cmpを使うと偏角の昇順に並べられる。
 struct angsort{
   ll x;
