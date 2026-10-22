@@ -128,6 +128,8 @@ void structure_tests() {
 void math_tests() {
     using Mint = atcoder::modint998244353;
     Combination<Mint> comb(200), zero(0);
+    Combination<Mint> million(1000000);
+    assert(million.com(1000000,1)==Mint(1000000) && million.com(1000000,1000000)==Mint(1));
     assert(zero.com(0,0) == Mint(1) && comb.com(-1,0) == Mint(0) && comb.com(2,-1) == Mint(0));
     vector<Mint> row(201); row[0] = 1;
     for(int n = 0; n <= 200; ++n) {
@@ -149,6 +151,9 @@ void math_tests() {
         assert(ok == (g != 0 && 17%g == 0)); if(ok) assert(a*x+b*y == 17);
     }
     ll x,y,g; assert(solveDiophantine(0,0,0,x,y,g));
+    assert(solveDiophantine(1,0,LLONG_MIN,x,y,g) && x==LLONG_MIN && y==0);
+    assert(extGCD(LLONG_MAX,LLONG_MAX-1,x,y)==1);
+    assert(static_cast<__int128>(LLONG_MAX)*x+static_cast<__int128>(LLONG_MAX-1)*y==1);
     for(ll m = 1; m <= 50; ++m) for(ll a = -20; a <= 20; ++a) {
         ll expected = 1%m;
         for(int e = 0; e <= 50; ++e) {
@@ -168,6 +173,26 @@ void math_tests() {
 }
 
 void other_tests() {
+    // 3山・各0..5の全局面をゲーム木で評価し、通常Nim/上限付きNimと比較。
+    for(int limit=1; limit<=6; ++limit) {
+        vector<int> memo(216,-1);
+        function<bool(int)> wins=[&](int code) {
+            if(memo[code]!=-1) return memo[code]!=0;
+            int place=1;
+            for(int i=0; i<3; ++i,place*=6) {
+                int heap=code/place%6;
+                for(int take=1; take<=min(heap,limit); ++take) if(!wins(code-take*place)) {
+                    memo[code]=1; return true;
+                }
+            }
+            memo[code]=0; return false;
+        };
+        for(int code=0; code<216; ++code) {
+            vector<ll> heaps={code%6,code/6%6,code/36};
+            assert(Knim(heaps,limit)==wins(code));
+            if(limit==6) assert(nim(heaps)==wins(code));
+        }
+    }
     assert(!nim({}) && nim({1,2}) && !Knim({LLONG_MAX,LLONG_MAX},LLONG_MAX));
     assert(Knim({LLONG_MAX},LLONG_MAX));
     for(int trial = 0; trial < 200; ++trial) {
@@ -236,6 +261,21 @@ void other_tests() {
     assert(getIntersectionVolume(low,high,low2,high2)==1);
     assert(getIntersectionVolume3(low,high,low2,high2,low,high)==1);
     assert(box_volume_from_widths(LLONG_MAX,LLONG_MAX,0)==0);
+    assert(box_volume_from_widths(LLONG_MAX,1,1)==LLONG_MAX);
+    for(int trial=0; trial<150; ++trial) {
+        ll lo[3][3],hi[3][3];
+        for(int box=0; box<3; ++box) for(int axis=0; axis<3; ++axis) {
+            lo[box][axis]=random_int(6)-3; hi[box][axis]=lo[box][axis]+1+random_int(4);
+        }
+        ll count2=0,count3=0;
+        for(int x=-3; x<7; ++x) for(int y=-3; y<7; ++y) for(int z=-3; z<7; ++z) {
+            int p[]={x,y,z}; bool inside[3]={true,true,true};
+            for(int box=0; box<3; ++box) for(int a=0; a<3; ++a) inside[box]&=lo[box][a]<=p[a] && p[a]<hi[box][a];
+            count2+=inside[0]&&inside[1]; count3+=inside[0]&&inside[1]&&inside[2];
+        }
+        assert(getIntersectionVolume(lo[0],hi[0],lo[1],hi[1])==count2);
+        assert(getIntersectionVolume3(lo[0],hi[0],lo[1],hi[1],lo[2],hi[2])==count3);
+    }
     assert(LCA({}).depth.empty());
     LCA single(vector<vector<int>>(1)); assert(single.query(0,0)==0 && single.ancestor(0,INT_MAX)==-1);
 }

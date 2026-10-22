@@ -15,7 +15,7 @@ int keta(ll x,int a){
     return k;
 }
 
-// 繰り返し二乗法で a の b 乗を O(log b) で返す。前提: b >= 0。
+// 繰り返し二乗法で a の b 乗を O(log b) で返す。前提: b >= 0、結果はlong long内。
 ll pw(ll a,ll b){
     assert(b >= 0);
     ll res = 1;
@@ -44,6 +44,7 @@ bool iskaibun(ll x,int a){
 }
 
 // 1～xを左半分として作れる、偶数桁・奇数桁の10進回文を重複なしで返す。
+// long longに収まるものだけ返す。O(x log(x+1))時間・O(x)空間。
 set<ll> make_kaibun(int x){
     assert(x >= 0);
     set<ll> S;

@@ -25,7 +25,7 @@ struct WeightedUnionFind {
         if(!same(x,y)) return nullopt;
         return narrow(static_cast<__int128>(delta[y])-delta[x]);
     }
-    // 制約を追加。既存制約と矛盾するとfalse（連結関係・差分は変更しない）。
+    // 制約を追加。既存制約と矛盾するとfalse（制約内容は変更しない）。
     bool unite(int x,int y,long long w) {
         int rx = root(x), ry = root(y);
         __int128 difference = static_cast<__int128>(w)+delta[x]-delta[y];

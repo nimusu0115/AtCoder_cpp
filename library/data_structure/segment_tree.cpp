@@ -6,11 +6,14 @@ inline constexpr ll SEG_INF = numeric_limits<ll>::max();
 // 1点更新と区間最小値を O(log N) で処理するセグメント木。
 // 外部から指定する添字は0-indexed、区間は半開区間 [l,r) とする。
 struct SegmentTree{
+    int N;
     int size;
     vector<ll> tree;
 
     // 要素数 n、全要素 SEG_INF で初期化する。
     explicit SegmentTree(int n){
+        assert(n >= 0);
+        N = n;
         size = 1;
         while(size < n) size *= 2;
         tree.assign(size * 2,SEG_INF);
@@ -24,6 +27,7 @@ struct SegmentTree{
 
     // a[index] を value に変更する。
     void update(int index,ll value){
+        assert(0 <= index && index < N);
         int pos = index + size;
         tree[pos] = value;
         while(pos > 1){
@@ -34,6 +38,7 @@ struct SegmentTree{
 
     // 半開区間 [l,r) に含まれる要素の最小値を返す。
     ll query(int l,int r) const{
+        assert(0 <= l && l <= r && r <= N);
         ll res = SEG_INF;
         l += size;
         r += size;
@@ -49,6 +54,7 @@ struct SegmentTree{
 
     // a[index] の現在値を返す。
     ll get(int index) const{
+        assert(0 <= index && index < N);
         return tree[size + index];
     }
 };
