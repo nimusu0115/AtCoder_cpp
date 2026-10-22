@@ -1,5 +1,7 @@
 #include<bits/stdc++.h>
 using namespace std;
+const int dy[] = {1,0,-1,0};
+const int dx[] = {0,1,0,-1};
 
 // 無重みグラフの最短辺数。到達不能=-1。O(V+E)、空グラフは空配列。
 vector<int> bfs(const vector<vector<int>>& G,int start){
@@ -58,7 +60,6 @@ vector<vector<int>> grid_bfs(const vector<string>& G,pair<int,int> start,char wa
     int sy = start.first;
     int sx = start.second;
     if(sy < 0 || sy >= H || sx < 0 || sx >= W || G[sy][sx] == wall) return dist;
-    const int dy[] = {1,0,-1,0},dx[] = {0,1,0,-1};
     queue<pair<int,int>> Q;
     dist[sy][sx] = 0;
     Q.push(start);
@@ -86,7 +87,6 @@ vector<vector<int>> grid_multi_source_bfs(const vector<string>& G,const vector<p
     if(H > 0) W = static_cast<int>(G[0].size());
     for(const auto& row : G) assert(static_cast<int>(row.size()) == W);
     vector<vector<int>> dist(H,vector<int>(W,-1));
-    const int dy[] = {1,0,-1,0},dx[] = {0,1,0,-1};
     queue<pair<int,int>> Q;
     for(auto start : starts){
         int y = start.first;
