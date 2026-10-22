@@ -1,33 +1,45 @@
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
 
-struct DFSResult {
-    vector<int> parent, depth, tin, tout, preorder, postorder;
+struct DFSResult{
+    vector<int> parent;
+    vector<int> depth;
+    vector<int> tin,tout;
+    vector<int> preorder,postorder;
 };
 
 // 始点から到達可能な頂点を反復DFS。未到達の値=-1、根の親=-1。
 // tin/toutは入出のたびに進める2N時計。O(V+E)、再帰なし。
-DFSResult dfs(const vector<vector<int>>& g, int start) {
-    int n = static_cast<int>(g.size());
-    DFSResult r;
-    r.parent.assign(n,-1); r.depth.assign(n,-1);
-    r.tin.assign(n,-1); r.tout.assign(n,-1);
-    if(n == 0) return r;
-    assert(0 <= start && start < n);
-    vector<int> next(n), stack = {start};
+DFSResult dfs(const vector<vector<int>>& G,int start){
+    int N = static_cast<int>(G.size());
+    DFSResult res;
+    res.parent.assign(N,-1);
+    res.depth.assign(N,-1);
+    res.tin.assign(N,-1);
+    res.tout.assign(N,-1);
+    if(N == 0) return res;
+    assert(0 <= start && start < N);
+    vector<int> next(N),stack = {start};
     int timer = 0;
-    r.depth[start] = 0; r.tin[start] = timer++;
-    r.preorder.push_back(start);
-    while(!stack.empty()) {
-        int v = stack.back();
-        if(next[v] == static_cast<int>(g[v].size())) {
-            r.tout[v] = timer++; r.postorder.push_back(v); stack.pop_back();
+    res.depth[start] = 0;
+    res.tin[start] = timer++;
+    res.preorder.push_back(start);
+    while(!stack.empty()){
+        int pos = stack.back();
+        if(next[pos] == static_cast<int>(G[pos].size())){
+            res.tout[pos] = timer++;
+            res.postorder.push_back(pos);
+            stack.pop_back();
             continue;
         }
-        int to = g[v][next[v]++];
-        if(r.depth[to] != -1) continue;
-        r.parent[to] = v; r.depth[to] = r.depth[v] + 1;
-        r.tin[to] = timer++; r.preorder.push_back(to); stack.push_back(to);
+        int to = G[pos][next[pos]];
+        next[pos]++;
+        if(res.depth[to] != -1) continue;
+        res.parent[to] = pos;
+        res.depth[to] = res.depth[pos] + 1;
+        res.tin[to] = timer++;
+        res.preorder.push_back(to);
+        stack.push_back(to);
     }
-    return r;
+    return res;
 }

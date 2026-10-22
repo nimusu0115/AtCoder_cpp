@@ -1,23 +1,39 @@
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
 
 // 閉路があれば空配列。空グラフも空配列。既定は辞書順最小、O(E+V log V)。
 // lexicographical=falseならqueueを使いO(V+E)。入力は有向グラフ。
-vector<int> topological_sort(const vector<vector<int>>& g, bool lexicographical = true) {
-    int n = static_cast<int>(g.size());
-    vector<int> indegree(n), order;
-    for(const auto& row : g) for(int to : row) ++indegree[to];
-    priority_queue<int,vector<int>,greater<int>> heap;
-    queue<int> fifo;
-    auto push = [&](int v) { if(lexicographical) heap.push(v); else fifo.push(v); };
-    for(int v = 0; v < n; ++v) if(indegree[v] == 0) push(v);
-    while(lexicographical ? !heap.empty() : !fifo.empty()) {
-        int v;
-        if(lexicographical) { v = heap.top(); heap.pop(); }
-        else { v = fifo.front(); fifo.pop(); }
-        order.push_back(v);
-        for(int to : g[v]) if(--indegree[to] == 0) push(to);
+vector<int> topological_sort(const vector<vector<int>>& G,bool lexicographical = true){
+    int N = static_cast<int>(G.size());
+    vector<int> indegree(N),order;
+    for(int from = 0;from < N;from++){
+        for(int to : G[from]) indegree[to]++;
     }
-    if(static_cast<int>(order.size()) != n) return {};
+    priority_queue<int,vector<int>,greater<int>> Q;
+    queue<int> normal_Q;
+    for(int pos = 0;pos < N;pos++){
+        if(indegree[pos] != 0) continue;
+        if(lexicographical) Q.push(pos);
+        else normal_Q.push(pos);
+    }
+    while(!Q.empty() || !normal_Q.empty()){
+        int pos;
+        if(lexicographical){
+            pos = Q.top();
+            Q.pop();
+        }
+        else{
+            pos = normal_Q.front();
+            normal_Q.pop();
+        }
+        order.push_back(pos);
+        for(int to : G[pos]){
+            indegree[to]--;
+            if(indegree[to] != 0) continue;
+            if(lexicographical) Q.push(to);
+            else normal_Q.push(to);
+        }
+    }
+    if(static_cast<int>(order.size()) != N) return {};
     return order;
 }

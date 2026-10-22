@@ -2,8 +2,8 @@
 // 提出時はinclude行の代わりに対象.cppを貼り付ける。
 #include "../dp/digit_dp.cpp"
 
-int main() {
+int main(){
     string s;
-    if(!(cin>>s)) return 0;
-    cout<<count_digit_conditions(s).val()<<'\n';
+    if(!(cin >> s)) return 0;
+    cout << count_digit_conditions(s).val() << endl;
 }
