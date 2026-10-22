@@ -44,7 +44,9 @@ library/
 | ファイル / 用途 | API・入力 → 結果 | 時間 / 空間 | 条件・使用例 |
 |---|---|---|---|
 | [bfs.cpp](graph/bfs.cpp) / 無重み最短路・到達判定 | `bfs(g,s)` → `vector<int>`距離、未到達-1 | O(n+m) / O(n) | 有向/無向可。`auto d=bfs(g,0); bool reachable=d[v]!=-1;` |
+| 同上 / 多始点BFS | `multi_source_bfs(G,starts)` → 各頂点への最も近い始点からの距離 | O(n+m+K) / O(n) | startsはvector<int>、Kは始点数。重複可、空なら全-1。有向/無向可。`auto d=multi_source_bfs(G,{0,3});` |
 | 同上 / 4近傍グリッド | `grid_bfs(vector<string>,{y,x},wall='#')` → 2D距離 | O(HW) / O(HW) | 長方形。壁/範囲外の始点なら全-1。`auto d=grid_bfs({"..","#."},{0,0});` |
+| 同上 / グリッド多始点BFS | `grid_multi_source_bfs(G,starts,wall='#')` → 最も近い始点からの2D距離 | O(HW+K) / O(HW) | startsはvector<pair<int,int>>の{行,列}。壁/範囲外の始点は無視、重複可。有効な始点なしなら全-1。`auto d=grid_multi_source_bfs(G,{{0,0},{2,3}});` |
 | [dfs.cpp](graph/dfs.cpp) / 到達・探索木・入出時刻 | `dfs(g,s)` → `DFSResult` | O(n+m) / O(n) | `.parent/.depth/.tin/.tout`は未到達-1。`.preorder/.postorder`は頂点列。根の親-1、深さ0。`auto r=dfs(g,0);` |
 | [shortest_path.cpp](graph/shortest_path.cpp) / Dijkstra | `dijkstra(wg,s)` → `vector<long long>`距離 | O((n+m)log(m+2)) / O(n+m) | `wg[v]`は`pair<int,long long>{to,cost}`。非負辺、有限距離<LLONG_MAX。未到達・表現範囲外はLLONG_MAX。`auto d=dijkstra(wg,0);` |
 | 同上 / 0-1 BFS | `zero_one_bfs(g01,s)` → `vector<int>`距離 | O(n+m) / O(n+m) | `g01[v]`は`pair<int,int>{to,0または1}`。未到達-1。`auto d=zero_one_bfs(g01,0);` |

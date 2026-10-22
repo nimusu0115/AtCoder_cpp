@@ -95,3 +95,10 @@ UBSanの実行とAtCoderジャッジでの確認は未実施。テストは上�
 - ソート比較と全方位木DPの演算指定には、簡潔さのためラムダを残した。既存のテストコードは変更せずに使用。
 - `python library/tests/run_tests.py --snippets --debug-stl` が警告なしで通過。全ランダム比較・全探索・20万頂点テスト、実行例4本、32本体の単体および結合コンパイル・実行を再確認。
 - `git diff --check -- library` 通過。コンテスト解答と作業前からの未コミット差分は変更していない。
+
+## 2026-10-23: 多始点BFS
+
+- `multi_source_bfs(G,starts)` と `grid_multi_source_bfs(G,starts,wall)` を追加。各頂点・マスへの最も近い始点からの距離を返し、未到達は-1。
+- `tests/test_bfs_multi_source.cpp` で300件の有向/無向グラフをFloyd–Warshall由来の期待値と比較、200件のグリッドを各始点からの単始点BFSの最小値と比較。
+- 始点の空集合・重複・全頂点が始点・単一始点との一致、空グラフ・空グリッド・壁・範囲外始点・壁文字指定・再呼び出しを確認。20万頂点のパスと大量の重複始点でも検証。
+- `python library/tests/run_tests.py --debug-stl` で新規・既存の全テストと実行例4本が通過。新規テストはbfs.cppだけをincludeし、単独での利用も確認。
