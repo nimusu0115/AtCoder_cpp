@@ -1,6 +1,32 @@
 #include<bits/stdc++.h>
 using namespace std;
 using ll = long long;
+
+//N以下の素数をO(N log log N)で生成する．
+//primesには素数が昇順で入る.
+vector<int> enumerate_primes(int N) {
+    vector<bool> is_prime(N + 1, true);
+
+    if (N >= 0) is_prime[0] = false;
+    if (N >= 1) is_prime[1] = false;
+
+    for (int p = 2; 1LL * p * p <= N; p++) {
+        if (!is_prime[p]) continue;
+
+        for (ll x = 1LL * p * p; x <= N; x += p) {
+            is_prime[x] = false;
+        }
+    }
+
+    vector<int> primes;
+    for (int x = 2; x <= N; x++) {
+        if (is_prime[x]) primes.push_back(x);
+    }
+
+    return primes;
+};
+
+
 // 2～Nの最小素因数を O(N log log N) で前計算するエラトステネスの篩。
 // 素数判定と素因数分解を繰り返し行う場合に使用する。
 struct Eratosthenes{

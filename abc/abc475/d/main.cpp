@@ -58,14 +58,19 @@ int main() {
 
     for(int p : PrimeTable){
         if(p < n || m <= p) continue;
-        map<char,int> m;
+        map<char,int> map;
+        vector<bool> used(10,false);
         bool flg = true;
         rep(i,N){
             int t = (p / pw(10,N - i - 1)) % 10;
-            if(!m.count(S[i])){
-                m[S[i]] = t;
+            if(!map.count(S[i])){
+                if(used[t]) flg = false;
+                else{
+                    map[S[i]] = t;
+                    used[t] = true;  
+                }
             }
-            else if(m[S[i]] != t) flg = false;
+            else if(map[S[i]] != t) flg = false;
         }
         if(flg){
             cout << p << endl;
