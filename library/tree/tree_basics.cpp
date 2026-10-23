@@ -38,6 +38,24 @@ struct TreeInfo{
     }
 };
 
+// 連結無向木の重心を頂点番号の昇順で返す。空木は空配列、それ以外は1個か2個。
+// 重心を除いた各連結成分の頂点数はN/2以下。この関数には上のTreeInfoも必要。
+// 時間・空間O(N)、再帰なし。
+vector<int> tree_centroids(const vector<vector<int>>& tree){
+    int N = static_cast<int>(tree.size());
+    TreeInfo info(tree);
+    vector<int> res;
+    for(int v = 0;v < N;v++){
+        int largest = N - info.subtree_size[v];
+        for(int to : tree[v]){
+            if(to == info.parent[v]) continue;
+            largest = max(largest,info.subtree_size[to]);
+        }
+        if(largest <= N / 2) res.push_back(v);
+    }
+    return res;
+}
+
 // 始点を含む頂点重みの経路和。負の重みも可、各和はlong longに収まること。
 // この関数をコピーするときは上のTreeInfoも必要。O(N)。
 vector<ll> tree_vertex_sums(const vector<vector<int>>& tree,const vector<ll>& weight,int root = 0){

@@ -20,6 +20,32 @@ Graph make_tree(int n, int shape) {
 
 void small_tree(const Graph& g, int root) {
     int n = static_cast<int>(g.size());
+    // 各頂点を削除して連結成分を数える愚直解と比較。
+    vector<int> expected_centroids;
+    for(int removed = 0; removed < n; removed++) {
+        vector<bool> seen(n,false);
+        seen[removed] = true;
+        int largest = 0;
+        for(int start = 0; start < n; start++) {
+            if(seen[start]) continue;
+            queue<int> q;
+            q.push(start);
+            seen[start] = true;
+            int size = 0;
+            while(!q.empty()) {
+                int v = q.front(); q.pop();
+                size++;
+                for(int to : g[v]) {
+                    if(seen[to]) continue;
+                    seen[to] = true;
+                    q.push(to);
+                }
+            }
+            largest = max(largest,size);
+        }
+        if(largest <= n / 2) expected_centroids.push_back(removed);
+    }
+    assert(tree_centroids(g) == expected_centroids);
     TreeInfo info(g,root); LCA lca(g,root); EulerTour et(g,root); HLD hld(g,root);
     auto traversal = dfs(g,root);
     assert(info.parent == lca.parent[0] && info.parent == traversal.parent && hld.parent == info.parent);
@@ -122,6 +148,10 @@ void noncommutative_rerooting() {
 void large_tree(int shape) {
     int n=200000;
     auto g=make_tree(n,shape);
+    vector<int> expected_centroids;
+    if(shape == 0) expected_centroids = {n / 2 - 1,n / 2};
+    else expected_centroids = {0};
+    assert(tree_centroids(g) == expected_centroids);
     TreeInfo t(g); LCA lca(g); EulerTour e(g); HLD h(g);
     auto d=tree_diameter(g); auto r=dfs(g,0);
     assert(t.subtree_size[0]==n && e.tout[0]==n && h.subtree(0).second==n);
@@ -138,6 +168,9 @@ void large_tree(int shape) {
 }
 
 int main() {
+    assert(tree_centroids({}).empty());
+    assert((tree_centroids({{}}) == vector<int>{0}));
+    assert((tree_centroids({{1},{0}}) == vector<int>{0,1}));
     assert(TreeInfo({}).order.empty() && EulerTour({}).order.empty() && HLD({}).pos.empty());
     assert(tree_vertex_sums({},{}).empty() && tree_diameter({}).from==-1);
     vector<vector<pair<int,int>>> empty;

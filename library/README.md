@@ -65,6 +65,7 @@ SCCの相互到達ペア数を求める元の使用例は [examples/scc_pairs.cp
 | ファイル / 用途 | API・入力 → 結果 | 時間 / 空間 | 条件・使用例 |
 |---|---|---|---|
 | [tree_basics.cpp](tree/tree_basics.cpp) / 根付き木・木DP順序 | `TreeInfo(tree,root=0)` | 構築O(n) / O(n) | `.parent/.depth/.subtree_size/.order`。根の親-1。`TreeInfo t(tree);`、`t.order`の逆順で子から親へDP |
+| 同上 / 木の重心 | `tree_centroids(tree)` → `vector<int>` | O(n) / O(n) | **TreeInfoもコピー**。重心を頂点番号の昇順で返す。非空木は1個か2個、空木は空配列。`auto centers=tree_centroids(tree);` |
 | 同上 / 頂点重み経路和 | `tree_vertex_sums(tree,weights,root=0)` → `vector<long long>` | O(n) / O(n) | **TreeInfoもコピー**。始点を含む。負の重み可、各経路和はlong long内。`auto sums=tree_vertex_sums(tree,weights);` |
 | 同上 / 無重み木の直径 | `tree_diameter(tree)` → `TreeDiameter` | O(n) / O(n) | 結果型もコピー。`.from/.to/.length/.path`、lengthは辺数。空木は端点-1・長さ0・空パス。`auto d=tree_diameter(tree);` |
 | [lca.cpp](tree/lca.cpp) / 二分ダブリング | `LCA(tree,root=0)` | 構築O(n log n)、問合せO(log n) / O(n log n) | `.query(u,v)`=LCA、`.distance(u,v)`=辺数、`.ancestor(v,k)`=k個上（なければ-1）。k>=0。`LCA l(tree); int a=l.query(u,v);` |
