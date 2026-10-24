@@ -12,4 +12,34 @@ template<class T> void chmax(T& a,T b){ if(a < b) a = b;}
 template<class T> void chmin(T& a,T b){ if(a > b) a = b;}
 
 int main() {
+    int N;
+    cin >> N;
+    vector<ll> X(N);
+    rep(i,N) cin >> X[i];
+
+    set<ll> S;
+    S.insert(0);
+    S.insert(llinf);
+    S.insert(-llinf);
+
+    ll ans = llinf;
+    rep(i,N){
+        ll up = *S.lower_bound(X[i]);
+        ll dwn = *(--S.lower_bound(X[i]));
+        ans += min(up - X[i],X[i] - dwn);
+        
+        ll dwndwn = *(prev(S.lower_bound(X[i]),2));
+        ans -= min(up - dwn,dwn - dwndwn);
+        ans += min(X[i] - dwn,dwn - dwndwn);
+
+        if(up < llinf){
+            ll upup = *(next(S.lower_bound(X[i]),1));
+            ans -= min(upup - up,up - dwn);
+            ans += min(upup - up,up - X[i]);
+        }
+
+        S.insert(X[i]);
+
+        cout << ans << endl;
+    }
 }

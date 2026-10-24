@@ -8,7 +8,7 @@
 #include "../data_structure/fenwick_tree.cpp"
 #include "../data_structure/segment_tree.cpp"
 #include "../math/combination.cpp"
-#include "../math/eratosthenes.cpp"
+#include "../math/prime.cpp"
 #include "../math/extended_gcd.cpp"
 #include "../math/mod_pow.cpp"
 #include "../math/digits.cpp"

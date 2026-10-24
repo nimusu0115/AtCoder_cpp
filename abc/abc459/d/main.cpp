@@ -21,54 +21,38 @@ int main() {
         string S;
         cin >> S;
 
-        vector<int> v(26,0);
-        rep(i,S.size()){
-            int a = S[i] - 'a';
-            v[a]++;
+        map<char,int> m;
+
+        for(char c : S) m[c]++;
+        vector<pair<int,char>> V;
+        for(auto v : m){
+            V.push_back({v.second,v.first});
+        }
+        sort(ALL(V));
+        reverse(ALL(V));
+
+        string s = "";
+        for(auto v : V){
+            rep(i,v.first) s += v.second;
         }
 
-        int m = 0;
-        rep(i,26) chmax(m,v[i]);
+        vector<char> ans(S.size());
+        onerep(i,S.size()){
+            int mid = (S.size() + 1) / 2;
+            if(i <= mid) ans[(i - 1) * 2] = s[i - 1];
+            else ans[(i - mid - 1) * 2 + 1] = s[i - 1];
+        }
 
-        if(m <= (S.size() + 1) / 2){
+        bool flg = true;
+        rep(i,S.size()){
+            if(i == 0) continue;
+            if(ans[i] == ans[i - 1]) flg = false;
+        }
+        if(flg){
             cout << "Yes" << endl;
-
-            set<pair<int,int>,greater<pair<int,int>>> ss;
-            rep(i,26){
-                if(v[i] != 0) ss.insert({v[i],i});
-            }
-
-            string ansl = "",ansr = "";
-
-            bool flg = true;
-            while(ss.size() > 1){
-                if(flg){
-                    auto k = *ss.begin();
-                    char a = 'a' + k.second;
-                    ansl = ansl + string(k.first,a);
-                }
-                else{
-                    auto k = *ss.begin();
-                    char a = 'a' + k.second;
-                    ansr = string(k.first,a) + ansr;
-                }
-                ss.erase(ss.begin());
-                flg ^= 1;
-            }
-            auto k = *ss.begin();
-            char a = 'a' + k.second;
-            int t = (S.size() + 1) / 2 - ansl.size();
-            ansl = ansl + string(t,a);
-            ansr = string(k.first - t,a) + ansr;
-
-            rep(i,S.size()){
-                if(i % 2 == 0) cout << ansl[i / 2];
-                else cout << ansr[(i - 1) / 2];
-            }
+            rep(i,S.size()) cout << ans[i];
             cout << endl;
         }
-        else{
-            cout << "No" << endl;
-        }
+        else cout << "No" << endl;
     }
 }

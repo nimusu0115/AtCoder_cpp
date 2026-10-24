@@ -20,7 +20,7 @@ library/
   math/            篩・累乗・逆元・拡張GCD・二項係数・桁操作
   string/          Manacher・ACL Z-algorithm
   geometry/        偏角・軸平行矩形/直方体
-  dp/              問題固有の桁DP例
+  dp/              LIS・LCS・編集距離・問題固有の桁DP例
   techniques/      圧縮・尺取り・累積和・いもす
   game/            Nim
   examples/        main付き実行例（提出時は本体を貼り付ける）
@@ -33,7 +33,7 @@ library/
 `G`・`N`・`Q`・`pos`・`res`などの名前、`i++`、`for(int i = 0;i < N;i++){` の形式を基本とする。
 独立した処理は一行ずつ書き、複数のループや状態更新を一行に詰め込まない。
 新規部分のpairの取り出しは `.first/.second`、単純な条件分岐は `if/else` を優先する。
-比較関数や全方位木DPの演算指定など、短くまとまる箇所ではラムダを使う。
+処理の切り出しには通常の関数・テンプレート関数・構造体のメンバ関数を使い、原則ラムダを使わない。
 桁DPは状態の意味を添字で読める多次元配列で書く。
 
 ## グラフ
@@ -99,7 +99,11 @@ HLDの `.pos[v]` は頂点→配列位置、`.vertex[i]` はその逆。`.path(u
 - `lift(dp,from,to,edge_id)` は辺を通してto側へ渡す寄与を返す。辺重みはedge_idから外部配列を参照できる。
 - 戻り値 `[v]` はvを根にしたDP。空木は空配列。探索用rootを変えても結果は変わらない。
 
-[距離総和の実行例](examples/rerooting.cpp) では `{距離和,頂点数}` を使う。
+[距離総和の実行例](examples/rerooting.cpp) では通常の関数と構造体で演算を指定する。
+頂点・辺の重みがすべて1なら `{距離和,頂点数}`、重みを変えると
+`{sum(距離×頂点重み),頂点重みの総和}` を全根について計算する。同じ辺IDで辺重みを参照する。
+自分を含む部分木の値は `add_vertex`、隣の頂点から見た値への変換は `lift` に書く。
+状態はコピー可能な同一型Tで、`merge`・`add_vertex`・`lift` もTを返す。演算の途中も使用型の範囲内に収める。
 文字列など操作自体が長さに比例する型では、全体がO(n)になるとは限らない。
 
 ## データ構造
@@ -120,7 +124,7 @@ union by sizeと経路圧縮を使う。UFのrootのみ再帰だが、経路圧�
 | ファイル / 用途 | API・入力 → 結果 | 時間 / 空間 | 条件・使用例 |
 |---|---|---|---|
 | [combination.cpp](math/combination.cpp) / 二項係数 | `Combination<Mint>(max_n)`、`.com(n,k)` → Mint | 構築O(max_n+log mod)、問合せO(1) / O(max_n) | 素数mod、0<=max_n<mod。n<0/k<0/k>nなら0。それ以外はn<=max_n。`Combination<atcoder::modint998244353> c(1000); auto x=c.com(10,3);` |
-| [eratosthenes.cpp](math/eratosthenes.cpp) / 篩・素因数分解 | `Eratosthenes(N)` | 構築O(N log log N) / O(N) | N>=0。`.is_prime(x)` O(1)、`.factorize(x)` O(log x)→`{素因数,指数}`列、`.divisors(x)`→昇順約数（d個ならO(log x+d log d)）。`.primes/.min_factor`も保持。分解は1<=x<=N。`Eratosthenes e(100); auto f=e.factorize(84);` |
+| [prime.cpp](math/prime.cpp) / 篩・素因数分解 | `Eratosthenes(N)` | 構築O(N log log N) / O(N) | N>=0。`.is_prime(x)` O(1)、`.factorize(x)` O(log x)→`{素因数,指数}`列、`.divisors(x)`→昇順約数（d個ならO(log x+d log d)）。`.primes/.min_factor`も保持。分解は1<=x<=N。`Eratosthenes e(100); auto f=e.factorize(84);` |
 | [mod_pow.cpp](math/mod_pow.cpp) / modular累乗・素数逆元 | `modpow(a,b,mod)`、`modinv(a,mod)` → long long | O(log b)、逆元O(log mod) / O(1) | b>=0,mod>=1。逆元は素数mod>=2かつa%mod!=0。負a可、積は128bit。`auto x=modpow(-2,10,998244353);`。一般のmod演算にはACL modint推奨 |
 | [extended_gcd.cpp](math/extended_gcd.cpp) / 拡張GCD | `extGCD(a,b,x,y)` → 非負gcd、x/yへ係数出力 | O(log(max(abs(a),abs(b))+1)) / 同じ深さの再帰 | ax+by=g、a=b=0も可。a,bはLLONG_MIN以外。`long long x,y; auto g=extGCD(12,18,x,y);` |
 | 同上 / 一次不定方程式 | `solveDiophantine(a,b,c,x,y,g)` → 解の有無 | 同上 | **extGCDもコピー**。解があればax+by=c、g=gcd。選ばれる特殊解がlong long内。a=b=0はc=0のみ解あり。`long long x,y,g; bool ok=solveDiophantine(3,5,1,x,y,g);` |
@@ -128,7 +132,43 @@ union by sizeと経路圧縮を使う。UFのrootのみ再帰だが、経路圧�
 
 Combinationは必要な範囲の階乗・逆階乗だけを保持する。dynamic_modintを使う場合は構築後にmodを変えない。
 
-## 文字列・幾何・DP・その他
+## DP
+
+本体は既存と同じmainなしの `.cpp`。必要なファイルだけをmainより前へコピーする。
+入力長・添字・長さの結果はintの範囲内とする。比較・コピーをO(1)として下表の計算量を示す。
+N、Mはそれぞれの入力長。LCS・編集距離は片方が空なら早期終了する。
+
+| ファイル / 用途 | API・入力 → 結果 | 時間 / 補助空間 | 条件・注意点 |
+|---|---|---|---|
+| [lis.cpp](dp/lis.cpp) / LISの長さ | `lis_length(vector<T> A,strict=true)` → int | O(N log(N+1)) / O(N) | strict=trueは狭義、falseは広義。Tの`operator<`は狭義弱順序。空列は0。復元用配列は作らない |
+| 同上 / LISの復元 | `lis_indices(A,strict=true)` → vector<int> | O(N log(N+1)) / O(N) | **元配列の添字列**を昇順で返す。空列は空配列。最適解の1つで、辞書順最小の保証はない |
+| [lcs.cpp](dp/lcs.cpp) / LCSの長さ | `lcs_length(A,B)` → int | O(NM) / O(min(N,M)+1) | 同じ型のstringまたはvector<T>。要素に`operator==`が必要。空列なら0。短い方を列にして1行だけ保持 |
+| 同上 / LCSの復元 | `lcs_restore(A,B)` → 入力と同じ型の値の列 | O(NM) / O((N+1)(M+1)) | 空列なら空列。末尾が一致したら採用、不一致でDP値が同点ならA側の末尾を先に捨てる。巨大な入力ではテーブルのメモリに注意 |
+| [edit_distance.cpp](dp/edit_distance.cpp) / Levenshtein距離 | `edit_distance(A,B,insert_cost=1,delete_cost=1,replace_cost=1)` → ll | O(NM) / O(min(N,M)+1) | **AからBへの変換**。同じ型のstring/vector<T>、要素に`operator==`が必要。コストは非負、計算途中もll内。入力を入れ替える際は挿入・削除コストも交換。操作列の復元は行わない |
+
+```cpp
+vector<int> A = {3,1,2,2,4};
+int length = lis_length(A);          // 3: 狭義
+int nondecreasing = lis_length(A,false); // 4: 広義
+vector<int> indices = lis_indices(A);
+vector<int> values;
+for(int i : indices) values.push_back(A[i]);
+
+string S = "abcde",T = "ace";
+int common_length = lcs_length(S,T); // 3
+string common = lcs_restore(S,T);    // "ace"
+auto common_values = lcs_restore(vector<int>{1,2,3},vector<int>{2,3,4});
+ll distance = edit_distance(S,T);    // 2
+ll weighted = edit_distance(S,T,1,2,3); // 挿入1、削除2、置換3
+```
+
+LCS・編集距離には文字列リテラルを直接渡さず `string("abc")` のようにstringを渡す。
+vectorの要素はコピー可能とする。stringは文字コードのbyte単位で比較する。
+最小の使用例は [examples/sequence_dp.cpp](examples/sequence_dp.cpp)。
+全方位木DPは既存の [tree/rerooting.cpp](tree/rerooting.cpp) を使う。APIと条件は「木」を参照。
+問題固有の桁DPは次の表に記載する。
+
+## 文字列・幾何・その他
 
 | ファイル / 用途 | API・入力 → 結果 | 時間 / 空間 | 条件・使用例 |
 |---|---|---|---|
