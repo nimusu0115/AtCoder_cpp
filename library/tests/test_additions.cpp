@@ -165,8 +165,8 @@ void technique_tests() {
     }
     PrefixSum wide({-LLONG_MAX,LLONG_MAX,LLONG_MAX}); assert(wide.sum(1,2)==LLONG_MAX);
     PrefixSum2D p({{-LLONG_MAX,LLONG_MAX},{LLONG_MAX,0}}); assert(p.sum(1,0,2,2)==LLONG_MAX);
-    Imos im(2); im.add(0,2,LLONG_MIN); assert((im.build()==vector<ll>{LLONG_MIN,LLONG_MIN}));
-    Imos2D im2(1,1); im2.add(0,0,1,1,LLONG_MIN); assert(im2.build()[0][0]==LLONG_MIN);
+    Imos im(2); im.add(0,2,-LLONG_MAX); assert((im.build()==vector<ll>{-LLONG_MAX,-LLONG_MAX}));
+    Imos2D im2(1,1); im2.add(0,0,1,1,-LLONG_MAX); assert(im2.build()[0][0]==-LLONG_MAX);
     cout << "techniques: 200 randomized prefix/imos/Z cases passed\n";
 }
 

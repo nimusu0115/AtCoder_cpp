@@ -143,7 +143,7 @@ Combinationは必要な範囲の階乗・逆階乗だけを保持する。dynami
 | 同上 / 種類数制限 | `longest_subarray_at_most_k_distinct(a,K)` → 最長長 | O(n log(n+1)) / O(n) | 符号自由、比較可能な型。K<=0で0。`int len=longest_subarray_at_most_k_distinct(vector<int>{1,2,1},2);` |
 | [prefix_sum.cpp](techniques/prefix_sum.cpp) / 累積和 | `PrefixSum(a)`、`.sum(l,r)` → long long | 構築O(n)、問合せO(1) / O(n) | 保存する各prefixと返却値がlong long内。空配列可。`PrefixSum p({2,-1,4}); auto s=p.sum(1,3);` |
 | 同上 / 二次元累積和 | `PrefixSum2D(a)`、`.sum(y1,x1,y2,x2)` → long long | 構築O(HW)、問合せO(1) / O(HW) | 長方形。[y1,y2)×[x1,x2)。空vectorは0×0として扱う。保存prefix/返却値はlong long内。`PrefixSum2D p({{1,2},{3,4}}); auto s=p.sum(0,0,2,1);` |
-| [imos.cpp](techniques/imos.cpp) / 区間・矩形加算 | `Imos(n)`、`.add(l,r,x)`、`.build()`→vector<long long>。`Imos2D(h,w)`、`.add(y1,x1,y2,x2,x)`、`.build()`→2D配列 | 構築/build O(n)またはO(HW)、add O(1) / 同じ | 差分は128bit、各最終セルはlong long内。空区間・空配列可。buildは何度でも可能、その後の追加も可。`Imos im(5); im.add(1,4,2); auto a=im.build();` |
+| [imos.cpp](techniques/imos.cpp) / 区間・矩形加算 | `Imos(n)`、`.add(l,r,x)`、`.build()`→vector<long long>。`Imos2D(h,w)`、`.add(y1,x1,y2,x2,x)`、`.build()`→2D配列 | 構築/build O(n)またはO(HW)、add O(1) / 同じ | 差分・累積和の計算途中も含めてlong long内。空区間・空配列可。buildは何度でも可能、その後の追加も可。`Imos im(5); im.add(1,4,2); auto a=im.build();` |
 | [nim.cpp](game/nim.cpp) / Nimの勝敗 | `nim(heaps)`、`Knim(heaps,K)` → 先手必勝bool | O(n) / O(1) | 非負long longの山、K>=1。通常Nimと1手1..K個を除くゲーム。全山0ならfalse。`bool win=Knim({3,5},2);` |
 
 ## ACLとの使い分け
