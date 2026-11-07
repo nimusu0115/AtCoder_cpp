@@ -11,7 +11,7 @@ const double PI = 3.141592653589;
 template<class T> void chmax(T& a,T b){ if(a < b) a = b;}
 template<class T> void chmin(T& a,T b){ if(a > b) a = b;}
 // 無重みグラフの最短辺数。到達不能=-1。O(V+E)、空グラフは空配列。
-vector<int> bfs(const vector<vector<int>>& G,int start){
+vector<int> bfs(const vector<vector<int>>& G,vector<bool> used,int start){
     int N = static_cast<int>(G.size());
     vector<int> dist(N,-1);
     if(N == 0) return dist;
@@ -23,7 +23,7 @@ vector<int> bfs(const vector<vector<int>>& G,int start){
         int pos = Q.front();
         Q.pop();
         for(int to : G[pos]){
-            if(dist[to] != -1) continue;
+            if(dist[to] != -1 || used[to]) continue;
             dist[to] = dist[pos] + 1;
             Q.push(to);
         }
@@ -35,16 +35,23 @@ vector<int> solve(vector<vector<int>> G,int start,int goal){
     int pos = start;
     vector<int> res;
     res.push_back(start);
+    vector<bool> used(G.size(),false);
+    used[start] = true;
 
     while(true){
         for(auto to : G[pos]){
-            vector<vector<int>> g = G;
-            for(auto r : res){
-                for(auto p : g[r]){
-                }
-            }
+            if(used[to]) continue;
+            auto dist = bfs(G,used,goal);
+            if(dist[to] == -1) continue;
+            pos = to;
+            res.push_back(pos);
+            used[pos] = true;
+            break;
         }
+        if(pos == goal) break;
     }
+
+    return res;
 }
 
 int main() {
@@ -56,6 +63,7 @@ int main() {
 
         int N,M,X,Y;
         cin >> N >> M >> X >> Y;
+        X--,Y--;
         vector<int> U(M),V(M);
         rep(i,M){
             cin >> U[i] >> V[i];
@@ -69,5 +77,13 @@ int main() {
         }
 
         rep(i,N) sort(ALL(G[i]));
+
+        auto ans = solve(G,X,Y);
+
+        rep(i,ans.size()){
+            cout << ans[i] + 1;
+            if(i != ans.size() - 1) cout << " ";
+        }
+        cout << endl;
     }
 }

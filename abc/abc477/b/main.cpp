@@ -15,4 +15,25 @@ template<class T> void chmax(T& a,T b){ if(a < b) a = b;}
 template<class T> void chmin(T& a,T b){ if(a > b) a = b;}
 
 int main() {
+    int N,D;
+    cin >> N >> D;
+    vector<ll> X(N);
+    rep(i,N) cin >> X[i];
+
+    vector<int> ans;
+    rep(i,N){
+        bool flg = true;
+        rep(j,N){
+            if(i == j) continue;
+            if(abs(X[i] - X[j]) < D) flg = false;
+        }
+        if(flg) ans.push_back(i + 1);
+    }
+
+    cout << ans.size() << endl;
+    rep(i,ans.size()){
+        cout << ans[i];
+        if(i != ans.size() - 1) cout << " ";
+    }
+    cout << endl;
 }

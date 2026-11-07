@@ -12,4 +12,10 @@ template<class T> void chmax(T& a,T b){ if(a < b) a = b;}
 template<class T> void chmin(T& a,T b){ if(a > b) a = b;}
 
 int main() {
+    int N;
+    cin >> N;
+    vector<int> x(N),u(N - 1),v(N - 1),w(N - 1);
+    rep(i,N) cin >> x[i];
+
+    
 }
